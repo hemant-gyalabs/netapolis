@@ -1,0 +1,81 @@
+{
+  "app": {
+    "name": "Neopolis Dashboard",
+    "version": "1.0.0",
+    "description": "Internal dashboard for Neopolis Infra with project management, score tracking, and calculators"
+  },
+  "environments": {
+    "development": {
+      "api": {
+        "baseUrl": "http://localhost:3000/api"
+      },
+      "features": {
+        "mockData": true,
+        "debugMode": true
+      }
+    },
+    "staging": {
+      "api": {
+        "baseUrl": "https://staging-api.neopolisinfra.com/api"
+      },
+      "features": {
+        "mockData": true,
+        "debugMode": true
+      }
+    },
+    "production": {
+      "api": {
+        "baseUrl": "https://api.neopolisinfra.com/api"
+      },
+      "features": {
+        "mockData": false,
+        "debugMode": false
+      }
+    }
+  },
+  "deployment": {
+    "servers": {
+      "production": {
+        "host": "prod.neopolisinfra.com",
+        "username": "deploy",
+        "path": "/var/www/neopolisinfra.com/dashboard",
+        "port": 22
+      },
+      "staging": {
+        "host": "staging.neopolisinfra.com",
+        "username": "deploy",
+        "path": "/var/www/staging.neopolisinfra.com/dashboard",
+        "port": 22
+      }
+    },
+    "build": {
+      "command": "npm run build",
+      "outputDir": "build"
+    },
+    "backups": {
+      "enabled": true,
+      "path": "/var/www/backups/dashboard",
+      "keep": 5
+    }
+  },
+  "integration": {
+    "mainWebsite": {
+      "baseUrl": "https://neopolisinfra.com",
+      "calculatorsPath": "/calculators"
+    },
+    "calculators": {
+      "emiCalculator": {
+        "path": "/calculators/emi-calculator",
+        "enabled": true
+      },
+      "investmentCalculator": {
+        "path": "/calculators/investment-calculator",
+        "enabled": true
+      },
+      "stampDutyCalculator": {
+        "path": "/calculators/stamp-duty-calculator",
+        "enabled": true
+      }
+    }
+  }
+}

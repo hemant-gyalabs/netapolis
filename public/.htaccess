@@ -1,0 +1,69 @@
+# Apache Configuration File for Neopolis Dashboard
+# This file provides URL rewriting and security configurations
+
+# Enable rewrite engine
+RewriteEngine On
+
+# Handle front-end routing (React Router)
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule . /index.html [L]
+
+# Security headers
+<IfModule mod_headers.c>
+    # Protect against XSS attacks
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME-type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Prevent clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*; font-src 'self' data:; connect-src 'self' https://*;"
+    
+    # Strict Transport Security (only if using HTTPS)
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Cache control for static assets
+    <FilesMatch "\.(ico|pdf|jpg|jpeg|png|gif|js|css|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    
+    # No cache for HTML files
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Prevent access to sensitive files
+<FilesMatch "^(\.htaccess|\.htpasswd|\.git|\.env|\.gitignore|package.json|package-lock.json|composer.json|composer.lock|config.json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent PHP execution (if not needed)
+<FilesMatch "\.(?i:php)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
+
+# Set server timezone
+SetEnv TZ Asia/Kolkata
